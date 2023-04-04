@@ -1,11 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import z from 'zod';
 import { signInSchema } from '@/pages/types/schema';
+import bcrypt from 'bcrypt';
+
+
 
 // Infer the type of the input object from the schema
 type SignInInput = z.infer<typeof signInSchema>;
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     res.status(405).json({ message: 'Method Not Allowed' });
     return;
@@ -16,6 +19,17 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
    //try check input
     signInSchema.parse({ email, password });
+
+       // Generate salt
+    const salt = await bcrypt.genSalt(10);
+
+       // Use salt to hash password
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    //This is how u compare input password with hashedpassword
+    bcrypt.compare("22", hashedPassword, function(err, result) {
+        console.log(result)
+    });
 
 
     const message = `Hello, ${email}!`;
@@ -28,4 +42,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         res.status(500).json({ message: 'Internal Server Error' });
       }
   }
+
+  
 }
+async function generateSalt(): Promise<string> {
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    return salt;
+  }
