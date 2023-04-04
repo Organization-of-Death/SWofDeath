@@ -16,6 +16,7 @@ specifiers:
   react: 18.2.0
   react-dom: 18.2.0
   typescript: 5.0.3
+  unique-names-generator: ^4.7.1
   zod: ^3.21.4
 
 dependencies:
@@ -34,6 +35,7 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   typescript: 5.0.3
+  unique-names-generator: 4.7.1
   zod: 3.21.4
 
 packages:
@@ -2449,6 +2451,11 @@ packages:
       has-bigints: 1.0.2
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
+    dev: false
+
+  /unique-names-generator/4.7.1:
+    resolution: {integrity: sha512-lMx9dX+KRmG8sq6gulYYpKWZc9RlGsgBR6aoO8Qsm3qvkSJ+3rAymr+TnV8EDMrIrwuFJ4kruzMWM/OpYzPoow==}
+    engines: {node: '>=8'}
     dev: false
 
   /uri-js/4.4.1:

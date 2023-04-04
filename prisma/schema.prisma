@@ -25,15 +25,16 @@ model User {
   role         Role          @default(USER)
   addedFriend  User[]        @relation("friendship") // users that sent this user a friend request
   addFriend    User[]        @relation("friendship") // users who this user sent friend request to
+  salt         String
 }
 
 model MassageShop {
   id          Int      @id @default(autoincrement())
-  name        String
+  name        String   
   phoneNumber String
   address     String
-  openTime    DateTime
-  closeTime   DateTime
+  openTime    Int
+  closeTime   Int
 }
 
 model Reservation {
