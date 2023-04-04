@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  name         String?
+  phoneNumber  String?
+  reservations Reservation[]
+  role         Role          @default(USER)
+  addedFriend  User[]        @relation("friendship") // users that sent this user a friend request
+  addFriend    User[]        @relation("friendship") // users who this user sent friend request to
+}
+
+model MassageShop {
+  id          Int      @id @default(autoincrement())
+  name        String
+  phoneNumber String
+  address     String
+  openTime    DateTime
+  closeTime   DateTime
+}
+
+model Reservation {
+  id       Int      @id @default(autoincrement())
+  user     User     @relation(fields: [userId], references: [id])
+  userId   Int
+  date     DateTime
+  musicURL String?
+}
