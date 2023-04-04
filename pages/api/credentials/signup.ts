@@ -2,9 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import z from 'zod';
 import { signInSchema } from '@/pages/types/schema';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-
-
+const secretKey = 'dsdsfnwiicdsca'
 // Infer the type of the input object from the schema
 type SignInInput = z.infer<typeof signInSchema>;
 
@@ -31,9 +31,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log(result)
     });
 
+    //gen Token
+    const token = jwt.sign({ email:email, password: hashedPassword }, secretKey,{
+        expiresIn: '30d'
+    });
+
 
     const message = `Hello, ${email}!`;
-    res.status(200).json({ message });
+    res.status(200).json({ message,token });
   } catch (error) {
     if (error instanceof z.ZodError) {
         res.status(400).json({ message: 'Check your input carefully, especially TYPE' });
