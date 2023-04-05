@@ -13,7 +13,7 @@ type Data = {
 // password will be randomUserName
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-    if (req.method === 'POST') {
+    if (req.method === 'GET') {
         const seedNo = 10;
 
         await prisma.user.deleteMany();
