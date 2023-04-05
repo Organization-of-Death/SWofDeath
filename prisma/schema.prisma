@@ -10,6 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//เก่งจริงๆครับ กุแพ้
 enum Role {
   USER
   ADMIN
