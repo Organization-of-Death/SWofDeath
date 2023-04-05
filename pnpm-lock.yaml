@@ -11,6 +11,7 @@ specifiers:
   eslint: 8.37.0
   eslint-config-next: 13.2.4
   jsonwebtoken: ^9.0.0
+  jwt-decode: ^3.1.2
   next: 13.2.4
   prisma: ^4.12.0
   react: 18.2.0
@@ -30,6 +31,7 @@ dependencies:
   eslint: 8.37.0
   eslint-config-next: 13.2.4_eslint@8.37.0+typescript@5.0.3
   jsonwebtoken: 9.0.0
+  jwt-decode: 3.1.2
   next: 13.2.4_react-dom@18.2.0+react@18.2.0
   prisma: 4.12.0
   react: 18.2.0
@@ -1690,6 +1692,10 @@ packages:
     dependencies:
       jwa: 1.4.1
       safe-buffer: 5.2.1
+    dev: false
+
+  /jwt-decode/3.1.2:
+    resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==}
     dev: false
 
   /language-subtag-registry/0.3.22:
