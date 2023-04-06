@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Prisma } from "@prisma/client";
 const { Client, Intents, Events, GatewayIntentBits } = require("discord.js");
-import { initDiscord } from "@/pages/types/discord";
+import { sendDiscordMessage } from "@/pages/types/discord";
 import { prisma } from "@/prisma/utils";
 
 export default async function handler(
@@ -38,7 +38,6 @@ export default async function handler(
           //gen Token
 
           console.log("??");
-          await initDiscord();
 
           const token = jwt.sign(
             { email: user.email, id: user.id, role: user.role },
@@ -46,6 +45,9 @@ export default async function handler(
             {
               expiresIn: "30d",
             }
+          );
+          sendDiscordMessage(
+            `ใครนิ อ้อ เค้าคือ ${email} นั้นเอง เป็น ${user.role} ซะด้วย`
           );
 
           //signed up

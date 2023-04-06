@@ -1,56 +1,36 @@
 import { Client, GatewayIntentBits, Partials } from "discord.js";
+import getConfig from "next/config";
 
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-  ],
-  partials: [Partials.Channel],
+const { serverRuntimeConfig } = getConfig();
+const client = serverRuntimeConfig.discordClient;
+const channel = client.channels.cache.get(process.env.CHANNEL_ID);
+
+client.on("messageCreate", (message) => {
+  if (message.author.username !== "hahahoho") {
+    if (!channel) {
+      console.error(`Unknown channel ID: ${process.env.CHANNEL_ID}`);
+      return;
+    }
+    channel.send(message.content);
+  }
+  if (message.author.username === "down") {
+    if (!channel) {
+      console.error(`Unknown channel ID: ${process.env.CHANNEL_ID}`);
+      return;
+    }
+    channel.send("จุ้จุ้จุ้");
+  }
+  if (message.author.username === "Theresa Rossweisse") {
+    if (!channel) {
+      console.error(`Unknown channel ID: ${process.env.CHANNEL_ID}`);
+      return;
+    }
+    channel.send("Master! You da best!");
+  }
 });
 
-let savedChannel = null;
-
-async function initDiscord() {
-  await client.login(process.env.DISCORD_BOT_TOKEN);
-
-  client.on("ready", () => {
-    console.log(`Logged in as ${client.user.tag}`);
-    savedChannel = client.channels.cache.get(process.env.CHANNEL_ID);
-    sendDiscordMessage("hi");
-  });
-
-  client.on("messageCreate", (message) => {
-    if (message.author.username !== "hahahoho") {
-      if (!savedChannel) {
-        console.error(`Unknown channel ID: ${process.env.CHANNEL_ID}`);
-        return;
-      }
-      savedChannel.send(message.content);
-    }
-    if (message.author.username === "down") {
-      if (!savedChannel) {
-        console.error(`Unknown channel ID: ${process.env.CHANNEL_ID}`);
-        return;
-      }
-      savedChannel.send("จุ้จุ้จุ้");
-    }
-    if (message.author.username === "Theresa Rossweisse") {
-      if (!savedChannel) {
-        console.error(`Unknown channel ID: ${process.env.CHANNEL_ID}`);
-        return;
-      }
-      savedChannel.send("Master! You da best!");
-    }
-  });
-}
-
 async function sendDiscordMessage(message: string) {
-  if (!savedChannel) {
-    console.error(`Unknown channel ID: ${process.env.CHANNEL_ID}`);
-    return;
-  }
-  savedChannel.send(message);
+  client.channels.cache.get(process.env.CHANNEL_ID).send(message);
 }
 
-export { client, initDiscord, sendDiscordMessage };
+export { sendDiscordMessage };

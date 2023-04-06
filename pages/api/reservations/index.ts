@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Reservation, Role } from "@prisma/client";
-import { prisma } from '@/prisma/utils';
+import { prisma } from "@/prisma/utils";
+import { sendDiscordMessage } from "@/pages/types/discord";
 import { reservationInput, reservationSchema } from '@/pages/types/schema';
 
 type ReservationData = {
@@ -13,6 +14,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ReservationData
   // extract the users data from the headers that was modified by the middleware
   const userId = parseInt(req.headers["jesus-id"] as string);
   const userRole = req.headers["jesus-role"] as Role;
+
+  if (req.method === "GET") {
+    // if he's a USER get all of his reservations, otherwise (he's an admin) query all of the reservations
+    const searchParams: {
+      where: {
+        userId?: number;
+      };
+    } = userRole === Role.USER ? { where: { userId: userId } } : { where: {} };
   const searchParams: {
     where: {
       userId?: number;
@@ -22,6 +31,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ReservationData
   if (req.method === 'GET') {
     // if he's a USER get all of his reservations, otherwise (he's an admin) query all of the reservations
     const reservations = await prisma.reservation.findMany(searchParams);
+    sendDiscordMessage(
+      `เอาเยอะนะเราอ่ะ เป็นแค่ ${userRole} เท่านั้นไม่ใช่หรือ`
+    );
 
     return res.status(200).json({ message: "successfully retrieved reservations", total: reservations.length, data: reservations });
   } else if (req.method === 'POST') {
@@ -45,11 +57,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ReservationData
 
     let reservation: Reservation | null;
     try {
-      reservationSchema.parse({date, massageShopId, userId, musicURL});
-
       reservation = await prisma.reservation.create({
         data: {
-          date: date,
+          date: payload.date,
           massageShop: {
             connect: {
               id: massageShopId
