@@ -70,7 +70,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           id: reservationId,
         }
       });
-      return res.status(200).json({ message: "deleted successfully", data: reservation });
+      return res.status(200).json({ message: "deleted successfully" });
     } catch (error) {
       // if there's no such messageShop
       return res.status(500).json({ message: error as String });

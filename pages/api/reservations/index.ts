@@ -12,14 +12,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ReservationData
   // extract the users data from the headers that was modified by the middleware
   const userId = parseInt(req.headers["jesus-id"] as string);
   const userRole = req.headers["jesus-role"] as Role;
+  const searchParams: {
+    where: {
+      userId?: number;
+    };
+  } = userRole === Role.USER ? { where: { userId: userId } } : { where: {} };
 
   if (req.method === 'GET') {
     // if he's a USER get all of his reservations, otherwise (he's an admin) query all of the reservations
-    const searchParams: {
-      where: {
-        userId?: number;
-      };
-    } = userRole === Role.USER ? { where: { userId: userId } } : { where: {} };
     const reservations = await prisma.reservation.findMany(searchParams);
 
     return res.status(200).json({ message: "successfully retrieved reservations", total: reservations.length, data: reservations });
@@ -65,6 +65,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ReservationData
     }
 
     return res.status(200).json({ message: "created reservation successfully", data: reservation });
+  } else if (req.method === "DELETE") {
+    const reservations = await prisma.reservation.deleteMany(searchParams);
+
+    return res.status(200).json({ message: `succesfully deleted ${reservations.count} reservations` });
   }
 
   else {
