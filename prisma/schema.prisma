@@ -50,6 +50,11 @@ model Reservation {
   massageShopId Int
 }
 
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+}
+
 model FriendRequest {
   id         Int                 @id @default(autoincrement())
   fromUser   User                @relation("sent", fields: [fromUserId], references: [id], onDelete: Cascade)
@@ -57,4 +62,5 @@ model FriendRequest {
   toUser     User                @relation("received", fields: [toUserId], references: [id], onDelete: Cascade)
   toUserId   Int
   createdAt  DateTime            @default(now())
+  status     FriendRequestStatus @default(PENDING)
 }
