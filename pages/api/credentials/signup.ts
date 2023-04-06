@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 import { signUpSchema } from "@/pages/types/schema";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { Secret } from "jsonwebtoken";
 import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -31,13 +31,7 @@ export default async function handler(
     // Use salt to hash password
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    //This is how u compare input password with hashedpassword
-    bcrypt.compare("221", hashedPassword, function (err, result) {
-      console.log(result);
-    });
-
     // create a user in the database ไม่เก่งแล้ว
-
     const user = await prisma.user.create({
       data: {
         email,
@@ -52,7 +46,7 @@ export default async function handler(
     //gen Token
     const token = jwt.sign(
       { email: email, password: hashedPassword },
-      process.env.SECRET_KEY,
+      process.env.SECRET_KEY as Secret,
       {
         expiresIn: "30d",
       }
@@ -82,6 +76,7 @@ export default async function handler(
       }
     } else {
       // If the error is not a Zod validation error, handle it according to your needs
+      console.log(error);
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
