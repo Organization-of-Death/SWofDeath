@@ -17,25 +17,67 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     where: {
       id: reservationId,
     }
-  })
+  });
+
+  // if there's no reservation
+  if (reservation === null) {
+    return res.status(200).json({ message: "no reservation with such id", data: reservation });
+  }
+
+  // doesnt belong to the user nor is an ADMIN
+  if (!(reservation?.userId === userId || userRole === "ADMIN")) {
+    return res.status(401).json({ message: "access denied" });
+  }
 
   if (req.method === 'GET') {
-    // if role = USER and the reservation belongs to the user OR is an ADMIN, return this reservation info
-    if ((userRole === "USER" && reservation?.userId === userId)
-      || userRole === "ADMIN") {
+    return res.status(200).json({ message: "success", data: reservation });
 
-      // if there's no reservation
-      if (reservation === null) {
-        return res.status(200).json({ message: "no reservation with such id", data: reservation });
-      }
 
-      return res.status(200).json({ message: "success", data: reservation });
+  } else if (req.method === 'PUT') {
+    // extract the payload data from the request body
+    const payload: Omit<Reservation, "id" | "userId"> = { ...req.body, date: new Date(req.body.date) };
+    let updatedReservation: Reservation | null;
+
+    try {
+      updatedReservation = await prisma.reservation.update({
+        where: {
+          id: reservationId
+        },
+        data: {
+          date: payload.date,
+          massageShop: {
+            connect: {
+              id: payload.massageShopId
+            }
+          },
+          user: {
+            connect: {
+              id: userId,
+            }
+          },
+          musicURL: payload.musicURL,
+        }
+      });
+    } catch (error) {
+      // if there's no such messageShop
+      return res.status(500).json({ message: error as String });
     }
+    return res.status(200).json({ message: "updated success", data: updatedReservation });
+  } else if (req.method === "DELETE") {
+    try {
+      const reservation = await prisma.reservation.delete({
+        where: {
+          id: reservationId,
+        }
+      });
+      return res.status(200).json({ message: "deleted successfully", data: reservation });
+    } catch (error) {
+      // if there's no such messageShop
+      return res.status(500).json({ message: error as String });
+    }
+  }
 
-    // else return error
-    return res.status(401).json({ message: "access denied" });
-
-  } else {
+  else {
     res.status(405).json({ message: 'Method Not Allowed' });
   }
 }
