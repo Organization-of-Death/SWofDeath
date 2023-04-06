@@ -4,6 +4,8 @@ import { signInSchema } from "@/pages/types/schema";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { PrismaClient, Prisma } from "@prisma/client";
+const { Client, Intents, Events, GatewayIntentBits } = require("discord.js");
+import { initDiscord } from "@/pages/types/discord";
 
 const prisma = new PrismaClient();
 
@@ -31,13 +33,17 @@ export default async function handler(
     });
 
     if (user) {
-      bcrypt.compare(password, user.password, function (err, result) {
+      bcrypt.compare(password, user.password, async function (err, result) {
         if (!result) {
           return res
             .status(400)
             .json({ message: "รหัสผิดนะจร้าาาาาาาาาาาาาาาาาาา :(" });
         } else {
           //gen Token
+
+          console.log("??");
+          await initDiscord();
+
           const token = jwt.sign(
             { email: user.email, id: user.id, role: user.role },
             process.env.SECRET_KEY,
