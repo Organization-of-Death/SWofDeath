@@ -12,7 +12,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== "GET") {
-    return res.status(405).json({ message: "Method Not Allowed" });
+
+    // TODO: invalidate the JWTTOKEN
+
+    return res.status(405).json({ message: "only GET is supported" });
   } else {
     return res.status(200).json({ message: "Sign out successfully ja!" });
   }

@@ -13,7 +13,7 @@ type Data = {
 // password will be "password"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-    if (req.method === 'GET') {
+    if (req.method === 'POST') {
         const seedNo = 10;
 
         await prisma.user.deleteMany();
@@ -54,6 +54,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
         res.status(200).json({ message: `seeded ${seedNo} users & admins success` });
     } else {
-        res.status(405).json({ message: 'Method Not Allowed' });
+        res.status(405).json({ message: 'only POST is supported' });
     }
 }

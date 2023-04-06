@@ -72,7 +72,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ReservationData
   }
 
   else {
-    return res.status(405).json({ message: "method not supported", data: undefined });
+    return res.status(405).json({ message: "only GET,POST,DELETE are supported", data: undefined });
   }
 }
 

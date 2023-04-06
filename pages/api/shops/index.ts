@@ -21,7 +21,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<MassageShopData
         });
         return res.status(200).json({ message: "successfully retrieved massage shops", total: massageShops.length, data: massageShops });
     } else {
-        return res.status(405).json({ message: "method not supported" });
+        return res.status(405).json({ message: "only GET is supported" });
     }
 }
 
