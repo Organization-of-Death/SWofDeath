@@ -40,22 +40,29 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ReservationData
 
     // extract the payload data from the request body
     const payload: Omit<Reservation, "id" | "userId"> = { ...req.body, date: new Date(req.body.date) };
-    const reservation = await prisma.reservation.create({
-      data: {
-        date: payload.date,
-        massageShop: {
-          connect: {
-            id: payload.massageShopId
-          }
-        },
-        user: {
-          connect: {
-            id: userId,
-          }
-        },
-        musicURL: payload.musicURL,
-      }
-    });
+
+    let reservation: Reservation | null;
+    try {
+      reservation = await prisma.reservation.create({
+        data: {
+          date: payload.date,
+          massageShop: {
+            connect: {
+              id: payload.massageShopId
+            }
+          },
+          user: {
+            connect: {
+              id: userId,
+            }
+          },
+          musicURL: payload.musicURL,
+        }
+      });
+    } catch (error) {
+      // if there's no such messageShop
+      return res.status(500).json({ message: error as String });
+    }
 
     return res.status(200).json({ message: "created reservation successfully", data: reservation });
   }

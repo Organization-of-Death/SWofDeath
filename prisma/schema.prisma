@@ -43,10 +43,10 @@ model MassageShop {
 
 model Reservation {
   id            Int         @id @default(autoincrement())
-  user          User        @relation(fields: [userId], references: [id])
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        Int
   date          DateTime
   musicURL      String?
-  massageShop   MassageShop @relation(fields: [massageShopId], references: [id])
+  massageShop   MassageShop @relation(fields: [massageShopId], references: [id], onDelete: Cascade)
   massageShopId Int
 }
