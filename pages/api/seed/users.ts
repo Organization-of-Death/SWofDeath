@@ -37,7 +37,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                         password: hashedPassword,
                         name: randomUserName,
                         role: (i < seedNo ? Role.USER : Role.ADMIN),
-                        salt: salt
                     }
                 });
             } catch (e) {

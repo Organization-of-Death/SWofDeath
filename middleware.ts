@@ -7,6 +7,7 @@ import { Role } from "@prisma/client";
 const protectedRoutes: [string, Role[]][] = [
   ["/api/credentials/logout", ["*" as Role]],
   ["/api/reservations", [Role.ADMIN, Role.USER]],
+  ["/api/user", [Role.ADMIN, Role.USER]],
 ];
 
 // apply middleware to all api paths except those that begins with /api/seed/*

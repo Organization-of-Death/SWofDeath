@@ -19,16 +19,15 @@ enum Role {
 //เก่งมากครับ
 
 model User {
-  id           Int           @id @default(autoincrement())
-  email        String        @unique
-  password     String
-  name         String?       @default("JOHASCOME")
-  phoneNumber  String?       @default("0000000000")
-  reservations Reservation[]
-  role         Role          @default(USER)
-  addedFriend  User[]        @relation("friendship") // users that sent this user a friend request
-  addFriend    User[]        @relation("friendship") // users who this user sent friend request to
-  salt         String
+  id                    Int             @id @default(autoincrement())
+  email                 String          @unique
+  password              String
+  name                  String?         @default("JOHASCOME")
+  phoneNumber           String?         @default("0000000000")
+  reservations          Reservation[]
+  role                  Role            @default(USER)
+  FriendRequestSent     FriendRequest[] @relation("sent")
+  FriendRequestReceived FriendRequest[] @relation("received")
 }
 
 model MassageShop {
@@ -49,4 +48,13 @@ model Reservation {
   musicURL      String?
   massageShop   MassageShop @relation(fields: [massageShopId], references: [id], onDelete: Cascade)
   massageShopId Int
+}
+
+model FriendRequest {
+  id         Int                 @id @default(autoincrement())
+  fromUser   User                @relation("sent", fields: [fromUserId], references: [id], onDelete: Cascade)
+  fromUserId Int
+  toUser     User                @relation("received", fields: [toUserId], references: [id], onDelete: Cascade)
+  toUserId   Int
+  createdAt  DateTime            @default(now())
 }
