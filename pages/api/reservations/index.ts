@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient, Prisma, Reservation, Role } from "@prisma/client";
-const prisma = new PrismaClient();
+import { Reservation, Role } from "@prisma/client";
+import { prisma } from '@/prisma/utils';
 
 type ReservationData = {
   message: String;
@@ -14,7 +14,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ReservationData
   const userRole = req.headers["jesus-role"] as Role;
 
   if (req.method === 'GET') {
-    // if he's a USER get all of his reservations
+    // if he's a USER get all of his reservations, otherwise (he's an admin) query all of the reservations
     const searchParams: {
       where: {
         userId?: number;

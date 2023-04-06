@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { Prisma, PrismaClient, Role } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { prisma } from '@/prisma/utils';
 
 const { uniqueNamesGenerator, adjectives, animals, countries } = require('unique-names-generator');
-const prisma = new PrismaClient();
 
 type Data = {
     message: string;

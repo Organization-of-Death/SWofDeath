@@ -3,9 +3,9 @@ import z from "zod";
 import { signUpSchema } from "@/pages/types/schema";
 import bcrypt from "bcrypt";
 import jwt, { Secret } from "jsonwebtoken";
-import { PrismaClient, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import { prisma } from "@/prisma/utils";
 
-const prisma = new PrismaClient();
 
 // Infer the type of the input object from the schema
 type SignUpInput = z.infer<typeof signUpSchema>;
