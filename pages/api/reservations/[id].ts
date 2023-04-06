@@ -1,8 +1,8 @@
-import { sendDiscordMessage } from '@/pages/types/discord';
-import { reservationInput, reservationSchema } from '@/pages/types/schema';
-import { prisma } from '@/prisma/utils';
-import { Reservation, Role } from '@prisma/client';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { sendDiscordMessage } from "@/pages/types/discord";
+import { reservationInput, reservationSchema } from "@/pages/types/schema";
+import { prisma } from "@/prisma/utils";
+import { Reservation, Role } from "@prisma/client";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 type ReservationData = {
   message: String;
@@ -41,19 +41,18 @@ export default async function handler(
   if (req.method === "GET") {
     return res.status(200).json({ message: "success", data: reservation });
   } else if (req.method === "PUT") {
+    sendDiscordMessage(`Put นะจ๊ะ `);
     // extract the payload data from the request body
-    const payload: Omit<Reservation, "id" | "userId"> = {
+    const payload: reservationInput = {
       ...req.body,
       date: new Date(req.body.date),
+      userId,
     };
-    const payload: reservationInput = { ...req.body, date: new Date(req.body.date), userId };
     const { date, massageShopId, musicURL } = payload;
-    
+
     let updatedReservation: Reservation | null;
-    sendDiscordMessage(
-      `มีปัญหากับ Response สิืท่า อ่านไม่รู้เรื่องใช่ไหมลา---`
-    );
     try {
+      reservationSchema.parse({ date, massageShopId, userId, musicURL });
       updatedReservation = await prisma.reservation.update({
         where: {
           id: reservationId,
@@ -87,20 +86,13 @@ export default async function handler(
           id: reservationId,
         },
       });
-      return res
-        .status(200)
-        .json({ message: "deleted successfully", data: reservation });
       return res.status(200).json({ message: "deleted successfully" });
     } catch (error) {
       // if there's no such messageShop
       return res.status(500).json({ message: error as String });
     }
   } else {
-    res.status(405).json({ message: "Method Not Allowed" });
-  }
-
-  else {
-    res.status(405).json({ message: 'only GET, PUT, DELETE supported' });
+    res.status(405).json({ message: "only GET, PUT, DELETE supported" });
   }
 }
 
