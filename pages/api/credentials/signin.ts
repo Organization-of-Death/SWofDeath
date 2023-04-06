@@ -1,15 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
-import { signInSchema } from "@/pages/types/schema";
+import { SignInInput, signInSchema } from "@/pages/types/schema";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Prisma } from "@prisma/client";
 const { Client, Intents, Events, GatewayIntentBits } = require("discord.js");
 import { initDiscord } from "@/pages/types/discord";
 import { prisma } from "@/prisma/utils";
-
-// Infer the type of the input object from the schema
-type SignInInput = z.infer<typeof signInSchema>;
 
 export default async function handler(
   req: NextApiRequest,

@@ -1,3 +1,4 @@
+import { reservationInput, reservationSchema } from '@/pages/types/schema';
 import { prisma } from '@/prisma/utils';
 import { Reservation, Role } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -35,10 +36,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   } else if (req.method === 'PUT') {
     // extract the payload data from the request body
-    const payload: Omit<Reservation, "id" | "userId"> = { ...req.body, date: new Date(req.body.date) };
+    const payload: reservationInput = { ...req.body, date: new Date(req.body.date), userId };
+    const { date, massageShopId, musicURL } = payload;
+    
     let updatedReservation: Reservation | null;
-
     try {
+      reservationSchema.parse({date, massageShopId, userId, musicURL});
       updatedReservation = await prisma.reservation.update({
         where: {
           id: reservationId

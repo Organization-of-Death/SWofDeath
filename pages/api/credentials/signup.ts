@@ -1,14 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
-import { signUpSchema } from "@/pages/types/schema";
+import { SignUpInput, signUpSchema } from "@/pages/types/schema";
 import bcrypt from "bcrypt";
 import jwt, { Secret } from "jsonwebtoken";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/prisma/utils";
-
-
-// Infer the type of the input object from the schema
-type SignUpInput = z.infer<typeof signUpSchema>;
 
 export default async function handler(
   req: NextApiRequest,

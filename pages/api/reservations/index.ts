@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Reservation, Role } from "@prisma/client";
 import { prisma } from '@/prisma/utils';
+import { reservationInput, reservationSchema } from '@/pages/types/schema';
 
 type ReservationData = {
   message: String;
@@ -39,16 +40,19 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ReservationData
 
 
     // extract the payload data from the request body
-    const payload: Omit<Reservation, "id" | "userId"> = { ...req.body, date: new Date(req.body.date) };
+    const payload: reservationInput = { ...req.body, date: new Date(req.body.date), userId };
+    const { date, massageShopId, musicURL } = payload;
 
     let reservation: Reservation | null;
     try {
+      reservationSchema.parse({date, massageShopId, userId, musicURL});
+
       reservation = await prisma.reservation.create({
         data: {
-          date: payload.date,
+          date: date,
           massageShop: {
             connect: {
-              id: payload.massageShopId
+              id: massageShopId
             }
           },
           user: {
