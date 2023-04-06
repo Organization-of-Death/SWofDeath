@@ -10,7 +10,7 @@ type Data = {
 };
 
 // Seed 10 USERS & 10 ADMIN
-// password will be randomUserName
+// password will be "password"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
     if (req.method === 'GET') {
@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             const salt = await bcrypt.genSalt(10);
 
             // Use salt to hash password
-            const hashedPassword = await bcrypt.hash(randomUserName, salt);
+            const hashedPassword = await bcrypt.hash("password", salt);
 
             try {
                 await prisma.user.create({
