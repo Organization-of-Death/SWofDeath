@@ -1,3 +1,4 @@
+import { sendDiscordMessage } from '@/pages/types/discord';
 import { reservationInput, reservationSchema } from '@/pages/types/schema';
 import { prisma } from '@/prisma/utils';
 import { Reservation, Role } from '@prisma/client';
