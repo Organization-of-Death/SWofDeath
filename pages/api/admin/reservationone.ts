@@ -4,6 +4,7 @@ import { signInSchema } from "@/pages/types/schema";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { PrismaClient, Prisma } from "@prisma/client";
+import { sendDiscordMessage } from "@/pages/types/discord";
 
 const prisma = new PrismaClient();
 
@@ -27,6 +28,9 @@ export default async function handler(
         .status(200)
         .json({ message: "There is no reservation with such as id" });
     }
+
+    sendDiscordMessage("แอดมินแอบทำไรสักอย่างอยู่ ระวังตัวด้วยล่ะน้องๆ");
+
     res.status(200).json(allre);
   } else if (req.method === "DELETE") {
     const { id } = req.body;
@@ -69,6 +73,7 @@ export default async function handler(
         }
       }
     }
+
     return res.status(200).json(newup);
   }
 }
