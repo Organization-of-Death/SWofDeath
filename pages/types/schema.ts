@@ -17,9 +17,18 @@ export const signInSchema: ZodSchema = z.object({
 export type SignInInput = z.infer<typeof signInSchema>;
 
 export const reservationSchema = z.object({
-  userId  : z.number(),
+  userId: z.number(),
   date: z.date(),
   musicURL: z.string().optional(),
   massageShopId: z.number(),
 });
 export type reservationInput = z.infer<typeof reservationSchema>;
+
+
+// list of all possible friendship actions
+export const friendshipMutationAction = z.enum(["ADD", "REMOVE", /* "ACCEPT", "IGNORE", "BLOCK" */]);
+export type friendshipMutationActionT = z.infer<typeof friendshipMutationAction>;
+export const friendshipMutationSchema = z.object({
+  action: friendshipMutationAction,
+});
+export type friendshipMutationInput = z.infer<typeof friendshipMutationSchema>;
