@@ -32,7 +32,6 @@ export default async function handler(
       data: {
         email,
         password: hashedPassword,
-        salt: salt,
         name,
         phoneNumber,
         role,
