@@ -1,9 +1,19 @@
-import { Client, GatewayIntentBits, Partials } from "discord.js";
+import { Routes, REST, Client, GatewayIntentBits, Partials } from "discord.js";
 import getConfig from "next/config";
+import { prisma } from "@/prisma/utils";
 
 const { serverRuntimeConfig } = getConfig();
 const client = serverRuntimeConfig.discordClient;
 const channel = client.channels.cache.get(process.env.CHANNEL_ID);
+
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
+  if (interaction.commandName === "getreservation") {
+    const all = await prisma.reservation.findMany({});
+    console.log(all);
+    interaction.reply(JSON.stringify(all));
+  }
+});
 
 client.on("messageCreate", (message) => {
   if (message.author.username !== "hahahoho") {
