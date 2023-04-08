@@ -4,6 +4,7 @@ const {
   Client,
   GatewayIntentBits,
   Partials,
+  ApplicationCommandOptionType,
   Routes,
   REST,
 } = require("discord.js");
@@ -24,7 +25,15 @@ const command1 = [
   },
   {
     name: "getreservation",
-    description: "get all yuor reservation",
+    description: "get all your reservation (Please Login first)",
+    options: [
+      {
+        name: "clientid",
+        description:
+          "get reservation for the specific user id, remove this option to get all reservation",
+        type: ApplicationCommandOptionType.Number,
+      },
+    ],
   },
 ];
 

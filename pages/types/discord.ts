@@ -9,9 +9,26 @@ const channel = client.channels.cache.get(process.env.CHANNEL_ID);
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
   if (interaction.commandName === "getreservation") {
-    const all = await prisma.reservation.findMany({});
+    const userid = interaction.options.get("clientid")?.value;
+    let all;
+    if (userid) {
+      all = await prisma.reservation.findMany({
+        where: {
+          userId: userid,
+        },
+      });
+    } else {
+      all = await prisma.reservation.findMany({});
+    }
+    if (all.length === 0) {
+      interaction.reply(
+        "There are no reservation for this specific userId, or all user doesn't have any reservation"
+      );
+    } else {
+      interaction.reply(JSON.stringify(all));
+    }
+
     console.log(all);
-    interaction.reply(JSON.stringify(all));
   }
 });
 
