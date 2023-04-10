@@ -8,7 +8,7 @@ import randomstring from "randomstring";
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
     const randomString = randomstring.generate({
-      length: 11,
+      length: 13,
       charset: "alphanumeric",
     });
 

@@ -4,6 +4,7 @@ import { prisma } from "@/prisma/utils";
 import { reservationInput, reservationSchema } from "@/pages/types/schema";
 import { sendDiscordMessage } from "@/pages/types/discord";
 
+
 type ReservationData = {
   message: String;
   total?: number;
