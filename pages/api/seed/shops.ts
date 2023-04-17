@@ -56,9 +56,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 }
 
+// generate a random shop opening hours. the shop can open from 1 to 24 (all day) hours starting at every hour of the day.
 function generateRandomOpeningHours(): [number, number] {
     const openTime = getRandomInt(0, 23);
-    const closeTime = getRandomInt(openTime + 1, 24); // ensure closing time is later than open time
+
+    const totalOpenHours = getRandomInt(1, 24);
+    if (totalOpenHours === 24) {
+        return [0, 0];
+    }
+    const closeTime = (openTime + totalOpenHours) % 24;
      return [openTime, closeTime];
 }
 
