@@ -1,0 +1,10 @@
+seq diag list
+- register (POST /api/credentials/signup)
+- login (POST /api/credentials/signin)
+- logout (POST /api/credentials/signout)
+- make reservation (POST /api/reservations)
+- get massage shop list (GET  /api/shops)
+- view all reservations (GET /api/reservations)
+- view a reservation (GET /api/reservations/[id])
+- edit a reservation (PUT /api/reservations/[id])
+- delete a reservation (DELETE /api/reservations/[id])

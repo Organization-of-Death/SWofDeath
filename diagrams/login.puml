@@ -1,0 +1,27 @@
+@startuml
+title Use Case : Login (POST /api/credentials/signin)
+
+box "Authentication & Authorization" #Lightblue
+User -> Middleware : middleware(request)
+Middleware -> Middleware : mustAuth(request)
+alt 
+Middleware -> jwtDecode : jwt_decode(token)
+end alt
+end box
+
+Middleware -> NextRouter : POST(requestPathname, email, password)
+NextRouter -> NextRouter : matchAPI(requestPathname)
+
+box "API Handler"
+NextRouter -> signInAPI : handler(req, res)
+signInAPI -> signInSchema : parse(userData)
+signInAPI -> PrismaClient : user.findFirst(email)
+database MYSQL
+PrismaClient -> MYSQL : SELECT(userData)
+signInAPI -> bcrypt : compare(password, user.password)
+signInAPI -> jwt : sign(credentials, options)
+signInAPI -> signInAPI : sendDiscordMessage(msg)
+jwt --> User : response(200, message, token)
+end box
+
+@enduml

@@ -15,7 +15,7 @@ export default async function handler(
   if (req.method !== "GET") {
 
     // TODO: invalidate the JWTTOKEN
-
+    
     return res.status(405).json({ message: "only GET is supported" });
   } else {
     sendDiscordMessage(`รีบไปไหนนนนนนนน กลับมาาาาาา`);

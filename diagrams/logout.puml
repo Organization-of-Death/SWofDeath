@@ -1,0 +1,21 @@
+@startuml
+title Use Case : Logout (POST /api/credentials/signout)
+
+box "Authentication & Authorization" #Lightblue
+User -> Middleware : middleware(request)
+Middleware -> Middleware : mustAuth(request)
+alt 
+Middleware -> jwtDecode : jwt_decode(token)
+end alt
+end box
+
+Middleware -> NextRouter : POST(requestPathname, email, password)
+NextRouter -> NextRouter : matchAPI(requestPathname)
+
+box "API Handler"
+NextRouter -> signOutAPI : handler(req, res)
+'TODO: apply logout
+jwt --> User : response(200, message, token=none)
+end box
+
+@enduml
