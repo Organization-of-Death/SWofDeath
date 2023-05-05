@@ -1,8 +1,8 @@
 seq diag list
 [x] register (POST /api/credentials/signup)
 [x] login (POST /api/credentials/signin)
-[?] logout (POST /api/credentials/signout)
-[-] get massage shop list (GET  /api/shops)
+[x] logout (POST /api/credentials/signout)
+[x] get massage shop list (GET  /api/shops)
 [x] make reservation (POST /api/reservations)
 [x] view all reservations (GET /api/reservations)
 [x] view a reservation (GET /api/reservations/[id])
