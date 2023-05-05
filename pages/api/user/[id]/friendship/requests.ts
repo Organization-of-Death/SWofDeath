@@ -26,7 +26,7 @@ async function handler(
         const queryId = parseInt(typeof id === "string" ? id : "-1")
         const myFriendsRequest = await getAllMyFriendRequests(userId);
 
-        // return all of the users' friends if the queryId slug is equal to the logged in userId or the user is an admin
+        // return all of the users' friends request if the queryId slug is equal to the logged in userId or the user is an admin
         if (queryId === userId || userRole === Role.ADMIN) {
             return res
                 .status(200)
@@ -72,10 +72,13 @@ const getAllMyFriendRequests = async (userId: number): Promise<FriendRequestsSum
         },
     });
 
-    // the friendRequests that are PENDING are those that do not intersect
+    
+    // convert it to an array for easier use later
     const requestSentArray = requestSent.map((r) => r.toUserId);
     const requestReceivedArray = requestReceived.map((r) => r.fromUserId);
-
+    
+    // the friendRequests that are PENDING are those that do not intersect
+    // for example, an outgoing request from A to B will be pending if A's requestReceived does not include a row in which the sender (fromUserId) is B
     const pendingOutgoing = requestSent.filter((r) => !requestReceivedArray.includes(r.toUserId)).map((r) => r.toUserId);
     const pendingIncoming = requestReceived.filter((r) => !requestSentArray.includes(r.fromUserId)).map((r) => r.fromUserId);
 
