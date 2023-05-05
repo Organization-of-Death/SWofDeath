@@ -43,8 +43,6 @@ async function handler(
     const userRole = req.headers["jesus-role"] as Role;
 
     if (req.method === "POST") {
-        sendDiscordMessage(`เอาเยอะนะเราอ่ะ เป็นแค่ ${userRole} เองนิ`);
-
         // get the other user id from the query url
         const { id } = req.query;
         const queryId = parseInt(typeof id === "string" ? id : "-1")

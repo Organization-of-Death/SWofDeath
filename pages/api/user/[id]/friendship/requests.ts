@@ -22,8 +22,6 @@ async function handler(
     const userRole = req.headers["jesus-role"] as Role;
 
     if (req.method === "GET") {
-        sendDiscordMessage(`เอาเยอะนะเราอ่ะ เป็นแค่ ${userRole} เองนิ`);
-
         const { id } = req.query;
         const queryId = parseInt(typeof id === "string" ? id : "-1")
         const myFriendsRequest = await getAllMyFriendRequests(userId);
