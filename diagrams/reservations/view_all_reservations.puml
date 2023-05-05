@@ -1,0 +1,28 @@
+@startuml
+title Use Case : view all reservations (GET /api/reservations)
+
+box "Authentication & Authorization" #Lightblue
+User -> Middleware : middleware(request)
+Middleware -> Middleware : mustAuth(request)
+alt 
+Middleware -> jwtDecode : jwt_decode(token)
+end alt
+end box
+
+Middleware -> NextRouter : GET(requestPathname)
+NextRouter -> NextRouter : matchAPI(requestPathname)
+
+box "API Handler"
+NextRouter -> APIhandler : handler(req, res)
+APIhandler -> APIhandler : getUserRoleAndId(req.headers)
+APIhandler -> APIhandler : setSearchParams(userRole)
+APIhandler -> PrismaClient : reservation.findMany(searchParams)
+database MYSQL
+PrismaClient -> MYSQL : SELECT(searchParams)
+MYSQL --> User : response(200, "successfully retrieved reservations", reservations)
+end box
+
+box "Discord Notifications" #LightGreen
+APIhandler -> Discord : sendDiscordMessage(`เอาเยอะนะเราอ่ะ เป็นแค่ ${userRole} เองนิ`)
+end box
+@enduml

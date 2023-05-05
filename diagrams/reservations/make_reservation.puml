@@ -1,0 +1,28 @@
+@startuml
+title Use Case : make a reservation (POST /api/reservations)
+
+box "Authentication & Authorization" #Lightblue
+User -> Middleware : middleware(request)
+Middleware -> Middleware : mustAuth(request)
+alt 
+Middleware -> jwtDecode : jwt_decode(token)
+end alt
+end box
+
+Middleware -> NextRouter : POST(requestPathname, userId, date, musicURL, massageShopId, role)
+NextRouter -> NextRouter : matchAPI(requestPathname)
+
+box "API Handler"
+NextRouter -> APIhandler : handler(req, res)
+APIhandler -> APIhandler : getUserRoleAndId(req.headers)
+APIhandler -> reservationSchema : parse(reservationData)
+APIhandler -> PrismaClient : massageShop.findFirstOrThrow(massageShopId)
+PrismaClient --> APIhandler : shop
+APIhandler -> APIhandler : checkValidHours(date,shop)
+APIhandler -> PrismaClient : reservation.create(reservationData)
+database MYSQL
+PrismaClient -> MYSQL : INSERT(reservationData)
+MYSQL --> User : response(200, "created reservation successfully", reservation)
+end box
+
+@enduml

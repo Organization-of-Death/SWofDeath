@@ -1,0 +1,25 @@
+@startuml
+title Use Case : view a reservation (GET /api/reservations/[id])
+
+box "Authentication & Authorization" #Lightblue
+User -> Middleware : middleware(request)
+Middleware -> Middleware : mustAuth(request)
+alt 
+Middleware -> jwtDecode : jwt_decode(token)
+end alt
+end box
+
+Middleware -> NextRouter : GET(requestPathname, reservationId)
+NextRouter -> NextRouter : matchAPI(requestPathname)
+
+box "API Handler"
+NextRouter -> APIhandler : handler(req, res)
+APIhandler -> APIhandler : getUserRoleAndId(req.headers)
+APIhandler -> APIhandler : setSearchParams(userRole)
+APIhandler -> PrismaClient : reservation.findUnique(reservationId)
+database MYSQL
+PrismaClient -> MYSQL : SELECT(searchParams)
+MYSQL --> User : response(200, "success", reservation)
+end box
+
+@enduml

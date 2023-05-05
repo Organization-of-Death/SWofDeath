@@ -1,0 +1,37 @@
+@startuml
+title Use Case : edit a reservation (PUT /api/reservations/[id])
+
+box "Authentication & Authorization" #Lightblue
+User -> Middleware : middleware(request)
+Middleware -> Middleware : mustAuth(request)
+alt 
+Middleware -> jwtDecode : jwt_decode(token)
+end alt
+end box
+
+Middleware -> NextRouter : PUT(requestPathname, updatedReservationData, reservationId)
+NextRouter -> NextRouter : matchAPI(requestPathname)
+
+box "API Handler"
+NextRouter -> APIhandler : handler(req, res)
+APIhandler -> APIhandler : getUserRoleAndId(req.headers)
+APIhandler -> APIhandler : setSearchParams(userRole)
+APIhandler -> reservationSchema : parse(updatedReservationData)
+
+== get the reservation ==
+APIhandler -> PrismaClient : reservation.findUnique(reservationId)
+database MYSQL
+PrismaClient -> MYSQL : SELECT(searchParams)
+MYSQL -> APIhandler : reservation
+
+== edit the reservation ==
+APIhandler -> PrismaClient : reservation.update(reservationId,updatedReservationData)
+PrismaClient -> MYSQL : UPDATE(reservationData)
+MYSQL --> User : response(200, "updated success", reservation)
+end box
+
+box "Discord Notifications" #LightGreen
+APIhandler -> Discord : sendDiscordMessage(`Put นะจ๊ะ`)
+end box
+
+@enduml
